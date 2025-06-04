@@ -2,7 +2,7 @@
     "name": "Offline Test Page",
     "short_name": "OfflineTest",
     "description": "A simple page to test offline access for GitHub Pages.",
-    "start_url": "/locationfetcher/index.html",
+    "start_url": "/offlinetesttool/index.html",
     "display": "standalone",
     "background_color": "#e0f2f7",
     "theme_color": "#00796b",
