@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Test Page</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #e0f2f7;
+            color: #263238;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #00796b;
+            margin-bottom: 15px;
+        }
+        p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        ol {
+            text-align: left;
+            margin: 20px auto;
+            padding-left: 25px;
+            max-width: 400px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Offline Capability Test Page</h1>
+        <p>This page is designed to test if your GitHub Pages site can be accessed even when you are offline, after an initial visit.</p>
+        <p>It uses a Service Worker to cache its content. If you see this page while offline, it means the test is successful!</p>
+
+        <h2>How to Test:</h2>
+        <ol>
+            <li><strong>Deploy:</strong> Upload this <code>index.html</code>, <code>manifest.json</code>, and <code>service-worker.js</code> to your GitHub repository (e.g., <code>boobalootoo/locationfetcher</code>).</li>
+            <li><strong>Visit Online:</strong> Open your GitHub Pages URL (e.g., <code>https://boobalootoo.github.io/locationfetcher/</code>) in your browser <strong>while connected to the internet</strong>.</li>
+            <li><strong>Verify Service Worker:</strong> (Optional, but recommended) Open browser Developer Tools (F12), go to "Application" tab, then "Service Workers". You should see a service worker registered for your site. Also check "Cache Storage" to see the cached files.</li>
+            <li><strong>Go Offline:</strong> Disconnect your device from the internet (turn off Wi-Fi, mobile data, or use DevTools Network tab to set to "Offline").</li>
+            <li><strong>Refresh/Re-open Page:</strong> Try refreshing the page, or close your browser and open the same URL again.</li>
+            <li><strong>Result:</strong> If this page loads successfully, your offline setup is working! If you see a "No Internet" message, there's still an issue.</li>
+        </ol>
+
+        <p id="status" style="margin-top: 20px; font-weight: bold; color: #d32f2f;"></p>
+    </div>
+
+    <script>
+        // Define the path for your GitHub Pages repository
+        const REPO_PATH = '/locationfetcher/'; // IMPORTANT: Adjust this if your repo name changes
+
+        // Register the Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register(REPO_PATH + 'service-worker.js', { scope: REPO_PATH })
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                        document.getElementById('status').innerText = 'Service Worker registered. Now try going offline!';
+                        document.getElementById('status').style.color = '#388e3c';
+                    })
+                    .catch(error => {
+                        console.error('Service Worker registration failed:', error);
+                        document.getElementById('status').innerText = 'Service Worker registration failed. Offline access may not work.';
+                        document.getElementById('status').style.color = '#d32f2f';
+                    });
+            });
+        } else {
+            document.getElementById('status').innerText = 'Service Workers are not supported by this browser. Offline access not possible.';
+            document.getElementById('status').style.color = '#d32f2f';
+        }
+    </script>
+</body>
+</html>
