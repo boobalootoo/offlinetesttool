@@ -44,6 +44,11 @@
         li {
             margin-bottom: 8px;
         }
+        #sw-version {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #546e7a;
+        }
     </style>
 </head>
 <body>
@@ -54,20 +59,29 @@
 
         <h2>How to Test:</h2>
         <ol>
-            <li><strong>Deploy:</strong> Upload this <code>index.html</code>, <code>manifest.json</code>, and <code>service-worker.js</code> to your GitHub repository (e.g., <code>boobalootoo/locationfetcher</code>).</li>
-            <li><strong>Visit Online:</strong> Open your GitHub Pages URL (e.g., <code>https://boobalootoo.github.io/locationfetcher/</code>) in your browser <strong>while connected to the internet</strong>.</li>
-            <li><strong>Verify Service Worker:</strong> (Optional, but recommended) Open browser Developer Tools (F12), go to "Application" tab, then "Service Workers". You should see a service worker registered for your site. Also check "Cache Storage" to see the cached files.</li>
+            <li><strong>Deploy:</strong> Upload these three files (<code>index.html</code>, <code>manifest.json</code>, <code>service-worker.js</code>) to the root of your GitHub repository (<code>boobalootoo/offlinetesttool</code>).</li>
+            <li><strong>Crucial First Visit (Online):</strong> Open your GitHub Pages URL (<code>https://boobalootoo.github.io/offlinetesttool/</code>) in your browser <strong>while connected to the internet</strong>.</li>
+            <li><strong>Verify Service Worker:</strong>
+                <ul>
+                    <li>Open browser Developer Tools (F12), go to "Application" tab, then "Service Workers".</li>
+                    <li><strong>IMPORTANT:</strong> If you see an old Service Worker (e.g., `v1` or `v2`), click "Unregister" for it.</li>
+                    <li>Check "Update on reload" and then **Hard Refresh** the page (<code>Ctrl+Shift+R</code> or <code>Cmd+Shift+R</code>).</li>
+                    <li>Confirm that `offline-test-v3` is now `activated and running`.</li>
+                    <li>Go to "Cache Storage" and expand `offline-test-v3`. You should see <code>/offlinetesttool/</code>, <code>/offlinetesttool/index.html</code>, and <code>/offlinetesttool/manifest.json</code> cached.</li>
+                </ul>
+            </li>
             <li><strong>Go Offline:</strong> Disconnect your device from the internet (turn off Wi-Fi, mobile data, or use DevTools Network tab to set to "Offline").</li>
             <li><strong>Refresh/Re-open Page:</strong> Try refreshing the page, or close your browser and open the same URL again.</li>
             <li><strong>Result:</strong> If this page loads successfully, your offline setup is working! If you see a "No Internet" message, there's still an issue.</li>
         </ol>
 
         <p id="status" style="margin-top: 20px; font-weight: bold; color: #d32f2f;"></p>
+        <p id="sw-version">Service Worker Version: Loading...</p>
     </div>
 
     <script>
         // Define the path for your GitHub Pages repository
-        const REPO_PATH = '/locationfetcher/'; // IMPORTANT: Adjust this if your repo name changes
+        const REPO_PATH = '/offlinetesttool/'; // UPDATED for your new repo name
 
         // Register the Service Worker
         if ('serviceWorker' in navigator) {
@@ -77,6 +91,11 @@
                         console.log('Service Worker registered with scope:', registration.scope);
                         document.getElementById('status').innerText = 'Service Worker registered. Now try going offline!';
                         document.getElementById('status').style.color = '#388e3c';
+
+                        // Get active service worker and display its version
+                        if (registration.active) {
+                            document.getElementById('sw-version').innerText = 'Service Worker Version: ' + registration.active.scriptURL.split('/').pop().replace('service-worker.js', 'v3'); // Assuming v3 for this test
+                        }
                     })
                     .catch(error => {
                         console.error('Service Worker registration failed:', error);
